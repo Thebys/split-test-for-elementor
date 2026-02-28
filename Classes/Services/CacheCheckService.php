@@ -102,9 +102,17 @@ class CacheCheckService {
 
 		$curlHandle = curl_init($homeUrl);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 5);
 
 		$curlResponse = curl_exec($curlHandle);
+		$httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
 		curl_close($curlHandle);
+
+		// If the request failed or returned a non-200 response,
+		// return a unique value to avoid false positive cache detection
+		if ($curlResponse === false || $httpCode !== 200 || !is_numeric($curlResponse)) {
+			return uniqid('error_', true);
+		}
 
 		return $curlResponse;
 	}
