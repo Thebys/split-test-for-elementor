@@ -8,15 +8,20 @@ class ConversionTracker {
 
 		global $wpdb;
 
-		$query = [];
-		$query[] = "SELECT * FROM ".$this->getInteractionsTable($wpdb);
-		$query[] = "WHERE splittest_id = ".$testId;
-		$query[] = "AND client_id = '".$clientId."'";
+		$table = $this->getInteractionsTable($wpdb);
 
-		$interactions = $wpdb->get_results(implode(" ", $query), OBJECT);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$interactions = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$table} WHERE splittest_id = %d AND client_id = %s",
+				$testId,
+				$clientId
+			),
+			OBJECT
+		);
 
 		if (sizeof($interactions) == 0) {
-			$result = $wpdb->insert($this->getInteractionsTable($wpdb), array(
+			$wpdb->insert($table, array(
 				'splittest_id' => $testId,
 				'variation_id' => $variationId,
 				'type' => 'view',
@@ -31,22 +36,28 @@ class ConversionTracker {
 
 		global $wpdb;
 
-		$query = [];
-		$query[] = "SELECT * FROM ".$this->getInteractionsTable($wpdb);
-		$query[] = "WHERE splittest_id = ".$testId;
-		$query[] = "AND client_id = '".$clientId."'";
+		$table = $this->getInteractionsTable($wpdb);
 
-		$interactions = $wpdb->get_results(implode(" ", $query), OBJECT);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$interactions = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$table} WHERE splittest_id = %d AND client_id = %s",
+				$testId,
+				$clientId
+			),
+			OBJECT
+		);
 
 		if (sizeof($interactions) > 0) {
-			$query = [];
-			$query[] = "UPDATE ".$this->getInteractionsTable($wpdb);
-			$query[] = "SET type = 'conversion', variation_id = ".$variationId;
-			$query[] = "WHERE splittest_id = ".$testId;
-			$query[] = "AND client_id = '".$clientId."'";
-
-			$wpdb->query(implode(" ", $query));
-			// LOW@kberlau Error Logging
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$table} SET type = 'conversion', variation_id = %d WHERE splittest_id = %d AND client_id = %s",
+					$variationId,
+					$testId,
+					$clientId
+				)
+			);
 		}
 
 	}

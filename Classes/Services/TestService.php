@@ -47,7 +47,7 @@ class TestService
 			$splitTestVariationId = $_COOKIE[$cookieName];
 		}
 
-		if (isset($_GET['stid'])) {
+		if (isset($_GET['stid']) && filter_var($_GET['stid'], FILTER_VALIDATE_INT)) {
 			$splitTestVariationId = $_GET['stid'];
 		}
 
@@ -87,20 +87,26 @@ class TestService
 		$targetVariation = null;
 		$variations = $this->normalizePercentages($test->variations);
 
+		if (empty($variations)) {
+			return null;
+		}
 
 		if (self::$settingsManager->getRawValue(SettingsManager::VARIANT_DISTRIBUTION_TYPE) === 'database') {
 			global $wpdb;
 
-			$query = [];
-			$query[] = "SELECT COUNT(*) as count, variation_id";
-			$query[] = "FROM " . $wpdb->prefix . "elementor_splittest_interactions";
-			$query[] = "WHERE splittest_id = " . $test->id . " GROUP BY variation_id";
+			$table = $wpdb->prefix . 'elementor_splittest_interactions';
 
-			$viewsAndConversions = $wpdb->get_results(implode(" ", $query));
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$viewsAndConversions = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT COUNT(*) as count, variation_id FROM {$table} WHERE splittest_id = %d GROUP BY variation_id",
+					$test->id
+				)
+			);
 
 			if (sizeof($viewsAndConversions) > 0) {
-				$lowestCount = $this->getVariationViewsAndConversionsCountById($viewsAndConversions, $variations[0]->id);
-                $targetVariation = $variations[0];
+				$lowestCount = PHP_INT_MAX;
+				$targetVariation = $variations[0];
 
 				foreach ($variations as $variation) {
 					$viewsAndConversionCount = $this->getVariationViewsAndConversionsCountById($viewsAndConversions, $variation->id);
@@ -115,16 +121,21 @@ class TestService
 			}
 		}
 
-		$rnd = rand(1, 100);
+		// Use mt_rand with 10000 range for better precision with fractional percentages.
+		$rnd = mt_rand(1, 10000);
 		$counter = 0;
 
 		foreach ($variations as $variation) {
-			if ($rnd > $counter && $rnd <= $counter + (double)$variation->normalizedPercentage) {
+			$counter += (int) round($variation->normalizedPercentage * 100);
+			if ($rnd <= $counter) {
 				$targetVariation = $variation;
 				break;
-			} else {
-				$counter += (double)$variation->normalizedPercentage;
 			}
+		}
+
+		// Fallback for floating-point edge cases (e.g. rnd=10000, counter=9999).
+		if ($targetVariation === null) {
+			$targetVariation = end($variations);
 		}
 
 		return $targetVariation;

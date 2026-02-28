@@ -28,13 +28,15 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
  * @copyright Copyright (C) 2025 Rocket Elements
  * @license Free for use if not bundle as a product. Code changes forbidden. Bundling and / or selling parts of this or as a whole is forbidden if not explicitly allowed by the author.
 
- * Plugin Name: Split Test For Elementor
- * Plugin URI: https://wordpress.org/plugins/split-test-for-elementor/
- * Description: Split Test For Elementor
- * Author: Rocket Elements
- * Version: 1.8.4
- * Author URI: https://www.rocketelements.io
- * License: Free for use if not bundle as a product. Code changes forbidden. Bundling and / or selling parts of this or as a whole is forbidden if not explicitly allowed by the author.
+ * Plugin Name: Split Test For Elementor (Thebys Fork)
+ * Plugin URI: https://github.com/Thebys/split-test-for-elementor
+ * Description: Split Test For Elementor — forked with bug fixes for template-loaded tests, SQL injection patches, and distribution improvements.
+ * Author: Rocket Elements / Thebys
+ * Version: 1.8.4-fork.1
+ * Author URI: https://github.com/Thebys
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI: false
  * Text Domain: split-test-for-elementor
  * Elementor tested up to: 4.4.0
  * Elementor Pro tested up to: 4.4.0
@@ -42,7 +44,7 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
  */
 
 define('SPLIT_TEST_FOR_ELEMENTOR_MAIN_FILE', __FILE__);
-define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4");
+define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.1");
 define('SPLIT_TEST_FOR_ELEMENTOR_VERSION_OPTION_NAME', "split_test_for_elementor_version");
 define('SPLIT_TEST_FOR_ELEMENTOR_PRO_VERSION_LINK', 'https://www.rocketelements.io/splittest-pro/?utm_source=plugin');
 define('SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_TEST_COUNT', 5);

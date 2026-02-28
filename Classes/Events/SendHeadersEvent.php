@@ -214,7 +214,9 @@ class SendHeadersEvent {
 			}
 
 			$targetVariations[$test->id] = $targetVariation;
-			self::$conversionTrack->trackView($test->id, $targetVariation->id, $clientId);
+			if ($targetVariation !== null) {
+				self::$conversionTrack->trackView($test->id, $targetVariation->id, $clientId);
+			}
 		}
 
 		return $targetVariations;

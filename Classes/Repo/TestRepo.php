@@ -33,7 +33,16 @@ class TestRepo {
 		}
 
 		global $wpdb;
-		$tests = $wpdb->get_results("SELECT * FROM ".$this->getTestTable()." WHERE id IN(".implode(",", $ids).")", OBJECT);
+		$sanitized_ids = array_map( 'intval', $ids );
+		$placeholders  = implode( ',', array_fill( 0, count( $sanitized_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$tests = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$this->getTestTable()} WHERE id IN({$placeholders})",
+				...$sanitized_ids
+			),
+			OBJECT
+		);
 
 		for ($i = 0; $i < sizeof($tests); $i++) {
 			$tests[$i]->variations = $this->getVariations($tests[$i]->id, $withInActive, $withDeleted);
@@ -79,23 +88,22 @@ class TestRepo {
 	public function getVariations($postId, $withInActive = false, $withDeleted = false) {
 		global $wpdb;
 
-		$query = [];
-		$query[] = "SELECT * FROM ".$this->getVariationTable();
-		if (!$withInActive && !$withDeleted) {
-			$query[] = "WHERE ".$this->getVariationTable().".active IS TRUE";
-			$query[] = "AND ".$this->getVariationTable().".deleted_at IS NULL";
-			$query[] = "AND splittest_id = ".$postId;
-		} else if (!$withInActive && $withDeleted) {
-			$query[] = "WHERE ".$this->getVariationTable().".active IS TRUE";
-			$query[] = "AND splittest_id = ".$postId;
-		} else if ($withInActive && !$withDeleted) {
-			$query[] = "WHERE ".$this->getVariationTable().".deleted_at IS NULL";
-			$query[] = "AND splittest_id = ".$postId;
-		} else {
-			$query[] = "WHERE splittest_id = ".$postId;
-		}
+		$table = $this->getVariationTable();
+		$conditions = [];
 
-		$results = $wpdb->get_results(implode(" ", $query), OBJECT);
+		if (!$withInActive) {
+			$conditions[] = "{$table}.active IS TRUE";
+		}
+		if (!$withDeleted) {
+			$conditions[] = "{$table}.deleted_at IS NULL";
+		}
+		$conditions[] = "splittest_id = " . intval($postId);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results(
+			"SELECT * FROM {$table} WHERE " . implode(' AND ', $conditions),
+			OBJECT
+		);
 		foreach ($results as $result) {
 			$result->post_id = (int) $result->post_id;
 		}
@@ -205,7 +213,14 @@ class TestRepo {
 		$conversionUrl = $this->normalizeConversionUrl($conversionUrl);
 
 		global $wpdb;
-		$tests = $wpdb->get_results("SELECT * FROM ".$this->getTestTable()." WHERE conversion_url = '".$conversionUrl."' AND conversion_type = 'url'", OBJECT);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$tests = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$this->getTestTable()} WHERE conversion_url = %s AND conversion_type = 'url'",
+				$conversionUrl
+			),
+			OBJECT
+		);
 
 		for ($i = 0; $i < sizeof($tests); $i++) {
 			$tests[$i]->variations = $this->getVariations($tests[$i]->id, false, false);

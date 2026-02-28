@@ -37,15 +37,21 @@ class StatisticsRepo {
 			return $variations;
 		}
 
-		// LOW use prepared statement
-		$query = [];
-		$query[] = "SELECT COUNT(*) as count, type, variation_id, Concat(YEAR(created_at), '-', MONTH(created_at), '-', DAY(created_at)) as date, ";
-		$query[] = "YEAR(created_at) as dateYear, MONTH(created_at) as dateMonth, DAY(created_at) as dateDay";
-		$query[] = "FROM ".$wpdb->prefix."elementor_splittest_interactions";
-		$query[] = "WHERE splittest_id = ".$testId." GROUP BY type, variation_id, date";
-		$query[] = "ORDER BY variation_id, date";
+		$table = $wpdb->prefix . "elementor_splittest_interactions";
 
-		$results = $wpdb->get_results(implode(" ", $query));
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT COUNT(*) as count, type, variation_id,
+				 Concat(YEAR(created_at), '-', MONTH(created_at), '-', DAY(created_at)) as date,
+				 YEAR(created_at) as dateYear, MONTH(created_at) as dateMonth, DAY(created_at) as dateDay
+				 FROM {$table}
+				 WHERE splittest_id = %d
+				 GROUP BY type, variation_id, date
+				 ORDER BY variation_id, date",
+				$testId
+			)
+		);
 
 		foreach ($results as $result) {
 			$dateString = $result->dateYear."-".str_pad($result->dateMonth, 2, "0", STR_PAD_LEFT)."-".str_pad($result->dateDay, 2, "0", STR_PAD_LEFT);
