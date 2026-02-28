@@ -1,0 +1,494 @@
+.split-test-for-elementor-test-index .content-wrapper, .split-test-for-elementor-test-form .content-wrapper, .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content, .split-test-for-elementor-statistics .split-test-line-chart, .split-test-for-elementor-statistics .split-test-date-range, .split-test-for-elementor-statistics .split-test-doughnut-chart, .split-test-for-elementor-statistics .split-test-data-table {
+    box-shadow: -3px 3px 11px -2px rgba(0, 0, 0, 0.25);
+}
+
+.split-test-for-elementor-test-index .content-wrapper {
+    max-width: 750px;
+    margin: 2em auto 0 auto;
+    background: white;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.split-test-for-elementor-test-index .content-wrapper .padding-wrapper {
+    padding: 1.5em;
+    position: relative;
+}
+
+.split-test-for-elementor-test-index .content-wrapper h2 {
+    margin-top: 0.25em;
+}
+
+.split-test-for-elementor-test-index .content-wrapper .add-test-button {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+}
+
+.split-test-for-elementor-test-index .content-wrapper table th, .split-test-for-elementor-test-index .content-wrapper table td {
+    padding: 1em;
+}
+
+.split-test-for-elementor-test-index .content-wrapper table th.button-col, .split-test-for-elementor-test-index .content-wrapper table td.button-col {
+    text-align: right;
+}
+
+.split-test-for-elementor-test-form .content-wrapper {
+    max-width: 750px;
+    margin: 2em auto 0 auto;
+    background: white;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    padding: 0.75%;
+}
+
+.split-test-for-elementor-test-form .content-wrapper form h2 {
+    margin-top: 0;
+}
+
+.split-test-for-elementor-test-form form .headline {
+    font-weight: bold;
+}
+
+.split-test-for-elementor-test-form form label {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    cursor: default;
+}
+
+.split-test-for-elementor-test-form form input {
+    display: block;
+}
+
+.split-test-for-elementor-test-form form input[type="text"] {
+    width: 100%;
+}
+
+.split-test-for-elementor-test-form form input[type="submit"] {
+    margin-top: 10px;
+}
+
+.split-test-for-elementor-test-form form select {
+    max-width: none;
+}
+
+.split-test-for-elementor-test-form .test-variations {
+    position: relative;
+}
+
+.split-test-for-elementor-test-form .test-variations .button-add-variation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    filter: hue-rotate(-101deg);
+}
+
+.split-test-for-elementor-test-form .test-variations .row {
+    position: relative;
+    margin-bottom: 0.5em;
+    padding-right: 2.5em;
+}
+
+.split-test-for-elementor-test-form .test-variations .row:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.split-test-for-elementor-test-form .test-variations .row .name {
+    width: 70%;
+}
+
+.split-test-for-elementor-test-form .test-variations .row .percentage {
+    width: 30%;
+}
+
+.split-test-for-elementor-test-form .test-variations .row > div {
+    float: left;
+}
+
+.split-test-for-elementor-test-form .test-variations .row.data input,
+.split-test-for-elementor-test-form .test-variations .row.data select {
+    margin-right: 2.5%;
+    width: 97.5%;
+}
+
+.split-test-for-elementor-test-form .test-variations .row .actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 2em;
+    color: red;
+}
+
+.split-test-for-elementor-test-form .test-variations .row .actions .button-delete {
+    filter: hue-rotate(-198deg);
+}
+
+.split-test-for-elementor-test-form .button-delete {
+    filter: hue-rotate(-198deg);
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-elements .row .post {
+    display: none;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-elements .row .url {
+    display: none;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-posts .row .name {
+    width: 40%;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-posts .row .post {
+    width: 40%;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-posts .row .percentage {
+    width: 20%;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-posts .row .url {
+    display: none;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-urls .row .name {
+    width: 40%;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-urls .row .url {
+    width: 40%;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-urls .row .post {
+    display: none;
+}
+
+.split-test-for-elementor-test-form .test-variations.test-variations-urls .row .percentage {
+    width: 20%;
+}
+
+.split-test-for-elementor-test-form .test-pages {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 3px solid #eee;
+}
+
+.split-test-for-elementor-test-form .test-pages .test-page {
+    margin-top: 0.5em;
+}
+
+.split-test-for-elementor-test-form .test-conversion-code textarea {
+    margin-top: 10px;
+    width: 100%;
+    background: white;
+}
+
+.split-test-for-elementor-statistics {
+    font-size: 16px;
+    color: #5e6977;
+}
+
+.split-test-for-elementor-statistics .messages {
+    margin: 2em 0 2em 0;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box {
+    position: relative;
+    width: 15%;
+    margin-right: 2.5%;
+    margin-bottom: 1.5em;
+    background: white;
+    border-radius: 8px;
+    float: left;
+    padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 1500px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box {
+        width: 20%;
+    }
+}
+
+@media only screen and (max-width: 1250px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box {
+        width: 25%;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box {
+        width: 31%;
+        margin-right: 2.3333333%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box {
+        width: 47.5%;
+        margin-right: 2.5%;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background: white;
+    padding: 1em 1.5em 0.5em 1.5em;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .headline {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95em;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .options {
+    position: absolute;
+    right: 1.5em;
+    top: 1em;
+    font-size: 0.95em;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .conversion-rate {
+    font-size: 3.25em;
+    margin: 0.2em 0 0.1em -2px;
+    line-height: 1em;
+}
+
+@media only screen and (max-width: 700px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .conversion-rate {
+        font-size: 2em;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .ranking {
+    position: absolute;
+    font-size: 2.2em;
+    right: 0.65em;
+    bottom: 1.225em;
+}
+
+@media only screen and (max-width: 700px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box .variation-content .ranking {
+        font-size: 1.5em;
+        bottom: 1.45em;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo {
+    background: #dadada;
+}
+
+@media only screen and (max-width: 700px) {
+    .split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo {
+        display: none;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo .variation-content {
+    position: relative;
+    background: #e6e6e6;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo .variation-content .options {
+    color: #ff8640;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo .variation-content .center-wrapper {
+    text-align: center;
+}
+
+.split-test-for-elementor-statistics .split-test-variation-wrapper .variation-box-promo .variation-content .center-wrapper .cta-button {
+    text-decoration: none;
+    color: #5e6977;
+    display: inline-block;
+    border-radius: 8px;
+    border: 2px solid #5e6977;
+    padding: 0.5em 1em;
+    font-weight: bold;
+    margin: 0.925em auto;
+}
+
+.split-test-for-elementor-statistics .split-test-line-chart {
+    background: white;
+    border-radius: 8px;
+    margin: 0.5em 2.5% 0 0;
+    width: 70%;
+    padding: 1.5%;
+    float: left;
+    box-sizing: border-box;
+}
+
+@media only screen and (max-width: 800px) {
+    .split-test-for-elementor-statistics .split-test-line-chart {
+        width: 97.5%;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-date-range {
+    background: white;
+    border-radius: 8px;
+    margin: 0.5em 2.5% 0 0;
+    width: 25%;
+    float: left;
+    box-sizing: border-box;
+    padding: 1em 3%;
+}
+
+@media only screen and (max-width: 800px) {
+    .split-test-for-elementor-statistics .split-test-date-range {
+        margin: 2.5em 2.5% 0 0;
+        width: 97.5%;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-date-range h2 {
+    color: #5e6977;
+    text-align: center;
+    margin: 0 0 0 0;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range .hint {
+    margin: 0.5em 0 0 0;
+    text-align: center;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form {
+    margin-top: 0.5em;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row {
+    margin-top: 1em;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row label, .split-test-for-elementor-statistics .split-test-date-range form .form-row input {
+    float: left;
+    width: 22.5%;
+    margin: 0 2.5% 0 0;
+    box-sizing: border-box;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row input {
+    text-align: center;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row input:nth-child(4n) {
+    margin-right: 0;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row .date-year {
+    width: 25%;
+}
+
+.split-test-for-elementor-statistics .split-test-date-range form .form-row .date-range-button {
+    text-align: center;
+    color: white;
+    display: block;
+    background: #5e6977;
+    width: 100%;
+    border: none;
+    float: left;
+    padding: 0.5em 0.25em;
+    line-height: 1em;
+    box-sizing: border-box;
+}
+
+.split-test-for-elementor-statistics .split-test-doughnut-chart {
+    background: white;
+    border-radius: 8px;
+    margin: 2em 2.5% 0 0;
+    width: 25%;
+    padding: 1.5%;
+    float: left;
+    box-sizing: border-box;
+}
+
+@media only screen and (max-width: 1000px) {
+    .split-test-for-elementor-statistics .split-test-doughnut-chart {
+        display: none;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-data-table {
+    background: white;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 97.5%;
+    margin: 2em 2.5% 0 0;
+    padding: 2%;
+    text-align: center;
+}
+
+@media only screen and (max-width: 800px) {
+    .split-test-for-elementor-statistics .split-test-data-table {
+        overflow: scroll;
+    }
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table th {
+    font-weight: normal;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table th, .split-test-for-elementor-statistics .split-test-data-table table td {
+    border: 1px solid #d4d4d4;
+    padding: 0.75em;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table .indicator {
+    border: none;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table .promo-row {
+    background: #f4f4f4;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table .promo-row td.promo-button {
+    padding: 0;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table .promo-row td.promo-button .cta-link {
+    text-decoration: none;
+    color: #5e6977;
+    display: inline-block;
+    border-radius: 8px;
+    border: 2px solid #5e6977;
+    padding: 0.5em 1em;
+    font-weight: bold;
+    margin: 0.925em auto;
+    font-size: 0.75em;
+    padding: 0.2em 1em;
+    margin: 0.65em auto;
+}
+
+.split-test-for-elementor-statistics .split-test-data-table table .promo-row .promo-text {
+    color: #ff8640;
+}
