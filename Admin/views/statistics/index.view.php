@@ -60,16 +60,6 @@ foreach ($sortedVariations as $variation) {
 			</div>
 		<?php } ?>
 
-		<?php if (!self::$licenceManager->hasActiveProLicence()) { ?>
-			<div class="variation-box variation-box-promo">
-				<div class="variation-content">
-					<div class="headline"><?php esc_html_e( 'More variations', 'split-test-for-elementor' ); ?></div>
-					<div class="options"><?php esc_html_e( 'Pro Version', 'split-test-for-elementor' ); ?></div>
-					<div class="center-wrapper"><a class="cta-button" href="<?php echo(SPLIT_TEST_FOR_ELEMENTOR_PRO_VERSION_LINK); ?>"><?php esc_html_e( 'unlock now', 'split-test-for-elementor' ); ?></a></div>
-				</div>
-			</div>
-		<?php } ?>
-
 	</div>
 
 	<div class="split-test-line-chart">
@@ -157,16 +147,6 @@ foreach ($sortedVariations as $variation) {
 					<td><?php echo($variation->allViews); ?></td>
 					<td><?php echo($variation->allConversions); ?></td>
 					<td><?php echo($variation->conversionRate); ?>%</td>
-				</tr>
-			<?php } ?>
-			<?php if (!self::$licenceManager->hasActiveProLicence()) { ?>
-				<tr class="promo-row">
-					<td class="indicator">&nbsp;</td>
-					<td class="promo-headline"><?php esc_html_e( 'More variations', 'split-test-for-elementor' ); ?></td>
-					<td class="promo-text"><?php esc_html_e( 'Pro Version', 'split-test-for-elementor' ); ?></td>
-					<td class="promo-text"><?php esc_html_e( 'Pro Version', 'split-test-for-elementor' ); ?></td>
-					<td class="promo-text"><?php esc_html_e( 'Pro Version', 'split-test-for-elementor' ); ?></td>
-					<td class="promo-button"><a href="<?php echo(SPLIT_TEST_FOR_ELEMENTOR_PRO_VERSION_LINK); ?>" class="cta-link"><?php esc_html_e( 'unlock now', 'split-test-for-elementor' ); ?></a></td>
 				</tr>
 			<?php } ?>
 		</table>

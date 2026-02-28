@@ -3,23 +3,9 @@
 namespace SplitTestForElementor\Admin\Classes\Controllers;
 
 use SplitTestForElementor\Admin\Classes\Repo\StatisticsRepo;
-use SplitTestForElementor\Classes\Misc\LicenceManager;
 use SplitTestForElementor\Classes\Misc\Util;
 
 class StatisticsController {
-
-	private static $licenceManager;
-
-	/**
-	 * SplitTestController constructor.
-	 */
-	public function __construct() {
-		if (self::$licenceManager == null) {
-			self::$licenceManager = new LicenceManager();
-		}
-	}
-
-	// Index; Create; Store; Show; Edit; Update; Delete
 
 	public function run() {
 		switch ($_GET['action']) {
@@ -125,14 +111,6 @@ class StatisticsController {
 
 	}
 
-	public function create() {
-
-	}
-
-	public function store() {
-
-	}
-
 	public function show() {
 
 	}
@@ -142,10 +120,6 @@ class StatisticsController {
 	}
 
 	public function update() {
-
-	}
-
-	public function delete() {
 
 	}
 

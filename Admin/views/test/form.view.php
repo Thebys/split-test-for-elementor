@@ -75,14 +75,6 @@ if ($scope == "edit") {
 
 		jQuery(".split-test-for-elementor.test-form .button-add-variation").click(function () {
 
-			if (!<?php echo(self::$licenceManager->hasActiveProLicence() ? 'true' : 'false'); ?>) {
-				var currentTestCount = jQuery(".split-test-for-elementor.test-form .test-variations .row.variation").length;
-				if (currentTestCount >= <?php echo(SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_VARIATION_COUNT); ?>) {
-					alert("Please buy the pro version to add more Tests");
-					return;
-				}
-			}
-
 			testCount++;
 
 			var template = jQuery("#test-variation-row-template").html();

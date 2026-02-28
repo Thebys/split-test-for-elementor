@@ -2,26 +2,12 @@
 
 namespace SplitTestForElementor\Admin\Classes\Controllers;
 
-use SplitTestForElementor\Classes\Misc\LicenceManager;
 use SplitTestForElementor\Classes\Misc\Util;
 use SplitTestForElementor\Classes\Repo\PostRepo;
 use SplitTestForElementor\Classes\Repo\PostTestRepo;
 use SplitTestForElementor\Classes\Repo\TestRepo;
 
 class SplitTestController {
-
-	private static $licenceManager;
-
-	// Index; Create; Store; Show; Edit; Update; Delete
-
-	/**
-	 * SplitTestController constructor.
-	 */
-	public function __construct() {
-		if (self::$licenceManager == null) {
-			self::$licenceManager = new LicenceManager();
-		}
-	}
 
 	public function run() {
 		switch (isset($_GET['action']) ? $_GET['action'] : "index") {

@@ -44,12 +44,7 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
 define('SPLIT_TEST_FOR_ELEMENTOR_MAIN_FILE', __FILE__);
 define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.1");
 define('SPLIT_TEST_FOR_ELEMENTOR_VERSION_OPTION_NAME', "split_test_for_elementor_version");
-define('SPLIT_TEST_FOR_ELEMENTOR_PRO_VERSION_LINK', 'https://www.rocketelements.io/splittest-pro/?utm_source=plugin');
-define('SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_TEST_COUNT', 5);
-define('SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_VARIATION_COUNT', 2);
 define('SPLIT_TEST_FOR_ELEMENTOR_SUPPORT_LINK', 'https://www.rocketelements.io/support/');
-
-define('SPLIT_TEST_FOR_ELEMENTOR_PRO_PLUGIN_PATH', "split-test-for-elementor-pro/plugin.php");
 
 require_once(__DIR__."/vendor/autoload.php");
 
