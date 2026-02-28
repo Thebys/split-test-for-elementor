@@ -2,13 +2,11 @@
 
 use SplitTestForElementor\Admin\Classes\Controllers\SplitTestController;
 use SplitTestForElementor\Admin\Classes\Controllers\StatisticsController;
-use SplitTestForElementor\Admin\Classes\Elementor\ConversionWidget;
 use SplitTestForElementor\Admin\Classes\Events\AdminInitEvent;
 use SplitTestForElementor\Admin\Classes\Events\AfterSectionEndEvent;
 use SplitTestForElementor\Classes\Endpoints\TestController;
 use SplitTestForElementor\Classes\Endpoints\VariationController;
 use SplitTestForElementor\Classes\Events\FormNewRecordEvent;
-use SplitTestForElementor\Classes\Events\FormSubmitEvent;
 use SplitTestForElementor\Classes\Events\FrontendBeforeRenderEvent;
 use SplitTestForElementor\Classes\Events\SendHeadersEvent;
 use SplitTestForElementor\Classes\Events\WidgetRenderContentEvent;
@@ -85,12 +83,7 @@ register_deactivation_hook( __FILE__, function () {
 });
 
 // =====================================================================================================================
-/*
-add_action('elementor/widgets/register', function(\Elementor\Widgets_Manager $widgets_manager) {
-	$widgets_manager->register(new ConversionWidget());
-});
-*/
-// Decide witch test variation to show and tracks conversions
+// Decide which test variation to show and tracks conversions
 add_action('send_headers', [new SendHeadersEvent(), 'fire']);
 
 add_action('wp_head', [new WpHeaderEvent(), 'fire']);
@@ -146,7 +139,7 @@ add_action('rest_api_init', function () {
 	register_rest_route( 'splitTestForElementor/v1', '/tests/', [
 		'methods' => 'POST',
 		'callback' => array(new TestController(), 'store'),
-        'permission_callback' => '__return_true'
+        'permission_callback' => function() { return current_user_can('publish_pages'); }
 	]);
 });
 
@@ -162,7 +155,7 @@ add_action('rest_api_init', function () {
 	register_rest_route('splitTestForElementor/v1', '/variations/', [
 		'methods' => 'POST',
 		'callback' => array(new VariationController(), 'store'),
-        'permission_callback' => '__return_true'
+        'permission_callback' => function() { return current_user_can('publish_pages'); }
 	]);
 });
 
@@ -198,30 +191,3 @@ add_action('plugins_loaded', function() {
 		UpdateManager::runUpdates();
 	}
 });
-
-/*
-add_action( 'wp_footer', function() {
-	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-		return;
-	}
-	?>
-	<script>
-		jQuery( function( $ ) {
-			// Add space for Elementor Menu Anchor link
-			if ( window.elementorFrontend ) {
-				jQuery(document).ready(function () {
-					elementor.hooks.addAction( 'panel/open_editor/widget', function( panel, model, view ) {
-						console.log("init split test "  + view);
-						// console.log(window);
-						document.splitTestForElementor.init();
-					});
-					jQuery(".elementor-tab-control-advanced").click(function () {
-						console.log("est");
-					});
-				});
-			}
-		} );
-	</script>
-	<?php
-} );
-*/

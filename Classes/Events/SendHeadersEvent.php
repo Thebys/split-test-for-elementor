@@ -188,7 +188,7 @@ class SendHeadersEvent {
 			if (isset($_COOKIE[$cookieName])) {
 				$splitTestId = $_COOKIE[$cookieName];
 			}
-			if (isset($_GET['stid'])) {
+			if (isset($_GET['stid']) && filter_var($_GET['stid'], FILTER_VALIDATE_INT)) {
 				$splitTestId = $_GET['stid'];
 			}
 

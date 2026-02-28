@@ -18,7 +18,6 @@ class WpHeaderEvent {
 	}
 
 	public function fire() {
-		// TODO@kberlau: May not use global
 		global $rocketSplitTestRunningTests;
 
 		?>
@@ -66,7 +65,7 @@ class WpHeaderEvent {
 			<script type="text/javascript">
 				window.rocketSplitTest.conversion = { };
 				window.rocketSplitTest.helpers = { };
-				window.rocketSplitTest.tests = <?php echo(json_encode($rocketSplitTestRunningTests)); ?>;
+				window.rocketSplitTest.tests = <?php echo(json_encode($rocketSplitTestRunningTests ?? [])); ?>;
 				window.rocketSplitTest.conversion.testIds = <?php echo(json_encode($conversionTestIds)); ?>;
                 window.rocketSplitTest.distributeType = "<?php echo(self::$settingsManager->getRawValue(SettingsManager::VARIANT_DISTRIBUTION_TYPE)); ?>";
 
