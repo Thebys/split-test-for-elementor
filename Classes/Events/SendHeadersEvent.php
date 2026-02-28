@@ -49,7 +49,6 @@ class SendHeadersEvent {
 			$postId = (int) get_option('page_on_front');
 		}
 
-		// TODO: Change this to $rocketSplitTestClientId
 		global $clientId;
 		global $rocketSplitTestClientId;
 		$splitTestClientIdCookieName = Constants::$SPLIT_TEST_CLIENT_ID_COOKIE;
@@ -63,12 +62,10 @@ class SendHeadersEvent {
 		}
 		$rocketSplitTestClientId = $clientId;
 
-		// TODO@kberlau: Move this to class or something
 		if (empty($postId) || $postId == null || $postId == 0 || $isHomepage) {
 			$this->progressTestsForRedirect($clientId);
 		}
 		if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			// TODO add url conversions
 			$this->prepareJsTestsForPage( $postId, $clientId );
 		} else {
 			$this->progressConversions( $postId, $clientId, $currentLink );
@@ -92,7 +89,6 @@ class SendHeadersEvent {
 			}
 
 			$variationId = (int) $_COOKIE[$cookieName];
-			// TODO@kberlau: Is this necessary
 			foreach ($test->variations as $variation) {
 				if ($variationId == $variation->id) {
 					self::$conversionTrack->trackConversion($test->id, $variationId, $clientId);
@@ -138,7 +134,6 @@ class SendHeadersEvent {
 		}
 
 
-        // TODO@kberlau: Add no cache
 		foreach ($test->variations as $variation) {
 			if ($variation->id == $targetVariation->id) {
 				if ($test->test_type == "pages") {
@@ -210,7 +205,6 @@ class SendHeadersEvent {
 			if ($targetVariation != null) {
 				Util::setCookie($cookieName, $targetVariation->id);
 			} else {
-				// LOW@kberlau ERROR!
 			}
 
 			$targetVariations[$test->id] = $targetVariation;

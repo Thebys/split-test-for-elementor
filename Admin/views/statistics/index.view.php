@@ -47,7 +47,6 @@ foreach ($sortedVariations as $variation) {
 		<?php } ?>
 	</div>
 
-	<?php //LOW@kberlau Multi Test Overflow ?>
 	<div class="split-test-variation-wrapper">
 		<?php for($i = 0; $i < sizeof($variations); $i++) { $variation = $variations[$i]; ?>
 			<div class="variation-box variation-box-<?php echo($i + 1); ?>" style="background: <?php echo(ColorUtil::getColor($i + 1));  ?>">
@@ -66,7 +65,6 @@ foreach ($sortedVariations as $variation) {
 		<canvas id="lineChart" width="400" height="150"></canvas>
 	</div>
 
-	<?php // LOW@kberlau Input Validation ?>
 	<div class="split-test-date-range">
 		<h2><?php esc_html_e( 'Timerange', 'split-test-for-elementor' ); ?></h2>
 		<p class="hint"><?php esc_html_e( 'Select your analytics period', 'split-test-for-elementor' ); ?></p>

@@ -170,7 +170,6 @@ class WpHeaderEvent {
 						for (var k = 0; k < test.variations.length; k++) {
 							var variation = test.variations[k];
 							if (random > counter && random <= counter + variation.percentage) {
-								<?php // TODO@kberlau: Test changing options ?>
 								test.variations[k].active = true;
 								window.rocketSplitTest.cookie.create(cookieName, variation.id, 365);
 							} else {
@@ -200,7 +199,6 @@ class WpHeaderEvent {
 				};
 
 				window.rocketSplitTest.addTest = function (test) {
-					<?php // TODO@kberlau: Check if test already there ?>
 					for (var i = 0; i < window.rocketSplitTest.tests.length; i++) {
 						if (window.rocketSplitTest.tests[i].id === test.id) {
 							return;

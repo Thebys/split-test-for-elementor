@@ -37,7 +37,6 @@ if ($scope == "edit") {
 </div>
 
 <script type="application/javascript">
-	<?php // LOW@kberlau move to js file ?>
 
 	window.homeUrl = "<?php echo( home_url('/')); ?>";
 
