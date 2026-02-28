@@ -70,17 +70,14 @@ class FrontendBeforeRenderEvent {
 //		}
 
 
-		// TODO@kberlau JS Testing
 		if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
 
-			$targetVariation = $targetVariations[$test->id];
-			foreach ($test->variations as $variation) {
-				if ($variation->id != $targetVariation->id && $variation->id == $variationId) {
-					echo('<style> .elementor-split-test-' . $testId . '-variation-' . $variation->id . ' { display:none !important; height: 0 !important; } </style>');
-				}
-			}
+			$targetVariation = $targetVariations[$test->id] ?? null;
 
-			if ($targetVariation == null) {
+			// Resolve variation BEFORE the hiding loop so display:none is never
+			// emitted for the winning variant.  Fixes template-loaded tests where
+			// SendHeadersEvent doesn't populate $targetVariations by page post ID.
+			if ($targetVariation === null) {
 				$targetVariation = self::$testService->getActiveVariation($test->id);
 				$targetVariations[$test->id] = $targetVariation;
 
@@ -88,6 +85,14 @@ class FrontendBeforeRenderEvent {
 				if (!isset($_COOKIE[$cookieName])) {
 					echo (new CacheBuster())->RenderSetCookieJs($cookieName, $targetVariation);
 					$_COOKIE[$cookieName] = $targetVariation->id;
+				}
+			}
+
+			if ($targetVariation !== null) {
+				foreach ($test->variations as $variation) {
+					if ($variation->id != $targetVariation->id && $variation->id == $variationId) {
+						echo('<style> .elementor-split-test-' . intval($testId) . '-variation-' . intval($variation->id) . ' { display:none !important; height: 0 !important; } </style>');
+					}
 				}
 			}
 		}

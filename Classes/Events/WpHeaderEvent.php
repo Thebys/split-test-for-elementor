@@ -238,12 +238,12 @@ class WpHeaderEvent {
 							return;
 						}
 
-						if (!window.window.rocketSplitTest.isActiveVariation(testId, variantId)) {
+						if (!window.rocketSplitTest.isActiveVariation(testId, variantId)) {
 							document.getElementById(containerId).parentElement.innerHTML = "";
 						}
 						window.rocketSplitTest.setInnerHtml(document.getElementById(containerId).parentElement, content);
 					} else {
-						if (!window.window.rocketSplitTest.isActiveVariation(testId, variantId)) {
+						if (!window.rocketSplitTest.isActiveVariation(testId, variantId)) {
 							document.getElementById(containerId).parentElement.innerHTML = "";
 						}
 						window.rocketSplitTest.setInnerHtml(document.getElementById(containerId).parentElement, content);
