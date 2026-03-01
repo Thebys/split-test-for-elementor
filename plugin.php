@@ -2,13 +2,11 @@
 
 use SplitTestForElementor\Admin\Classes\Controllers\SplitTestController;
 use SplitTestForElementor\Admin\Classes\Controllers\StatisticsController;
-use SplitTestForElementor\Admin\Classes\Elementor\ConversionWidget;
 use SplitTestForElementor\Admin\Classes\Events\AdminInitEvent;
 use SplitTestForElementor\Admin\Classes\Events\AfterSectionEndEvent;
 use SplitTestForElementor\Classes\Endpoints\TestController;
 use SplitTestForElementor\Classes\Endpoints\VariationController;
 use SplitTestForElementor\Classes\Events\FormNewRecordEvent;
-use SplitTestForElementor\Classes\Events\FormSubmitEvent;
 use SplitTestForElementor\Classes\Events\FrontendBeforeRenderEvent;
 use SplitTestForElementor\Classes\Events\SendHeadersEvent;
 use SplitTestForElementor\Classes\Events\WidgetRenderContentEvent;
@@ -24,15 +22,12 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
 
 /**
  * @package SplitTestForElementor
- * @version 1.8.4
- * @copyright Copyright (C) 2025 Rocket Elements
- * @license Free for use if not bundle as a product. Code changes forbidden. Bundling and / or selling parts of this or as a whole is forbidden if not explicitly allowed by the author.
-
+ *
  * Plugin Name: Split Test For Elementor (Thebys Fork)
  * Plugin URI: https://github.com/Thebys/split-test-for-elementor
  * Description: Split Test For Elementor — forked with bug fixes for template-loaded tests, SQL injection patches, and distribution improvements.
  * Author: Rocket Elements / Thebys
- * Version: 1.8.4-fork.1
+ * Version: 1.8.4-fork.2
  * Author URI: https://github.com/Thebys
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -44,14 +39,9 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
  */
 
 define('SPLIT_TEST_FOR_ELEMENTOR_MAIN_FILE', __FILE__);
-define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.1");
+define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.2");
 define('SPLIT_TEST_FOR_ELEMENTOR_VERSION_OPTION_NAME', "split_test_for_elementor_version");
-define('SPLIT_TEST_FOR_ELEMENTOR_PRO_VERSION_LINK', 'https://www.rocketelements.io/splittest-pro/?utm_source=plugin');
-define('SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_TEST_COUNT', 5);
-define('SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_VARIATION_COUNT', 2);
 define('SPLIT_TEST_FOR_ELEMENTOR_SUPPORT_LINK', 'https://www.rocketelements.io/support/');
-
-define('SPLIT_TEST_FOR_ELEMENTOR_PRO_PLUGIN_PATH', "split-test-for-elementor-pro/plugin.php");
 
 require_once(__DIR__."/vendor/autoload.php");
 
@@ -85,12 +75,7 @@ register_deactivation_hook( __FILE__, function () {
 });
 
 // =====================================================================================================================
-/*
-add_action('elementor/widgets/register', function(\Elementor\Widgets_Manager $widgets_manager) {
-	$widgets_manager->register(new ConversionWidget());
-});
-*/
-// Decide witch test variation to show and tracks conversions
+// Decide which test variation to show and tracks conversions
 add_action('send_headers', [new SendHeadersEvent(), 'fire']);
 
 add_action('wp_head', [new WpHeaderEvent(), 'fire']);
@@ -146,7 +131,7 @@ add_action('rest_api_init', function () {
 	register_rest_route( 'splitTestForElementor/v1', '/tests/', [
 		'methods' => 'POST',
 		'callback' => array(new TestController(), 'store'),
-        'permission_callback' => '__return_true'
+        'permission_callback' => function() { return current_user_can('publish_pages'); }
 	]);
 });
 
@@ -162,7 +147,7 @@ add_action('rest_api_init', function () {
 	register_rest_route('splitTestForElementor/v1', '/variations/', [
 		'methods' => 'POST',
 		'callback' => array(new VariationController(), 'store'),
-        'permission_callback' => '__return_true'
+        'permission_callback' => function() { return current_user_can('publish_pages'); }
 	]);
 });
 
@@ -198,30 +183,3 @@ add_action('plugins_loaded', function() {
 		UpdateManager::runUpdates();
 	}
 });
-
-/*
-add_action( 'wp_footer', function() {
-	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-		return;
-	}
-	?>
-	<script>
-		jQuery( function( $ ) {
-			// Add space for Elementor Menu Anchor link
-			if ( window.elementorFrontend ) {
-				jQuery(document).ready(function () {
-					elementor.hooks.addAction( 'panel/open_editor/widget', function( panel, model, view ) {
-						console.log("init split test "  + view);
-						// console.log(window);
-						document.splitTestForElementor.init();
-					});
-					jQuery(".elementor-tab-control-advanced").click(function () {
-						console.log("est");
-					});
-				});
-			}
-		} );
-	</script>
-	<?php
-} );
-*/

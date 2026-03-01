@@ -25,40 +25,7 @@ class SectionShouldRenderEvent
 
 
 	public function fire($shouldRender, $element) {
-		global $globalRenderingSection;
-
 		return true;
-
-		if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			return true;
-		}
-
-		if ($element->get_name() != "section") {
-			return true;
-		}
-
-		if ($globalRenderingSection) {
-			return true;
-		}
-
-		$elementorBeforeRenderHooks = $GLOBALS['wp_filter']['elementor/frontend/before_render'];
-		unset($GLOBALS['wp_filter']['elementor/frontend/before_render']);
-		$elementorSectionBeforeRenderHooks = $GLOBALS['wp_filter']['elementor/frontend/section/before_render'];
-		unset($GLOBALS['wp_filter']['elementor/frontend/section/before_render']);
-
-		$globalRenderingSection = true;
-		ob_start();
-		$element->print_element();
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		$GLOBALS['wp_filter']['elementor/frontend/before_render'] = $elementorBeforeRenderHooks;
-		$GLOBALS['wp_filter']['elementor/frontend/section/before_render'] = $elementorSectionBeforeRenderHooks;
-		$globalRenderingSection = false;
-
-		echo $this->cacheBuster->renderContent($content, $element);
-
-		return false;
 	}
 
 }

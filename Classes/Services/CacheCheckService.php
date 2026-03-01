@@ -5,7 +5,6 @@ namespace SplitTestForElementor\Classes\Services;
 use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Misc\ShowCacheWarningMessage;
 use SplitTestForElementor\Classes\Misc\ShowWPEngineMessage;
-use SplitTestForElementor\Classes\Repo\TestRepo;
 
 class CacheCheckService {
 
@@ -36,18 +35,10 @@ class CacheCheckService {
 	}
 
 	public function runCheck() {
-        // TODO we might have a better place "to check this"
         $url = $_SERVER["REQUEST_URI"];
         if (!str_contains($url, "page=splittest-for-elementor")) {
             return;
         }
-
-		/*
-		if ($this->isHostedOnWPEngine()) {
-			$this->validateCacheOnWPEngine();
-			return;
-		}
-		*/
 
         if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
             return;
@@ -56,13 +47,8 @@ class CacheCheckService {
 		$result = $this->hasCacheActive();
 
 		if ($result) {
-			// TODO check if the pro plugin is activated
-			if ($this->check_plugin_installed(SPLIT_TEST_FOR_ELEMENTOR_PRO_PLUGIN_PATH)) {
-                self::$settingsManager->setValue(SettingsManager::CACHE_BUSTER_ACTIVE, true);
-			} else {
-				$message = new ShowCacheWarningMessage();
-				$message->run();
-			}
+			$message = new ShowCacheWarningMessage();
+			$message->run();
 		}
 	}
 
@@ -95,30 +81,6 @@ class CacheCheckService {
 
     }
 
-	function check_plugin_installed( $plugin ) {
-		$plugin_file = ABSPATH . 'wp-content/plugins/'.$plugin;
-		return file_exists($plugin_file);
-	}
-
-	private function validateCacheOnWPEngine()
-	{
-		$result = $this->hasCacheActive();
-
-		if (!$result) {
-			return;
-		}
-
-		if ($this->check_plugin_installed(SPLIT_TEST_FOR_ELEMENTOR_PRO_PLUGIN_PATH)) {
-			self::$settingsManager->setValue(SettingsManager::CACHE_BUSTER_ACTIVE, true);
-			$message = new ShowWPEngineMessage();
-			$message->run();
-		} else {
-			$message = new ShowCacheWarningMessage();
-			$message->run();
-		}
-
-	}
-
 	private function hasCacheActive()
 	{
 		$responses = [];
@@ -140,9 +102,17 @@ class CacheCheckService {
 
 		$curlHandle = curl_init($homeUrl);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 5);
 
 		$curlResponse = curl_exec($curlHandle);
+		$httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
 		curl_close($curlHandle);
+
+		// If the request failed or returned a non-200 response,
+		// return a unique value to avoid false positive cache detection
+		if ($curlResponse === false || $httpCode !== 200 || !is_numeric($curlResponse)) {
+			return uniqid('error_', true);
+		}
 
 		return $curlResponse;
 	}

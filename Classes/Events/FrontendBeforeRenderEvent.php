@@ -3,9 +3,7 @@
 namespace SplitTestForElementor\Classes\Events;
 
 use \Elementor\Element_Base;
-use Elementor\Element_Section;
 use Elementor\Plugin;
-use Elementor\Widget_Base;
 use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Repo\TestRepo;
 use SplitTestForElementor\Classes\Services\CacheBuster;
@@ -60,16 +58,6 @@ class FrontendBeforeRenderEvent {
 			$test = $test[0];
 		}
 
-//		if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-//			if ($element instanceof Element_Section) {
-//				$children = $element->get_children();
-//				foreach ($children as $child) {
-//					$this->setSplitTestSettingsOnChildren($child, $testId, $variationId);
-//				}
-//			}
-//		}
-
-
 		if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
 
 			$targetVariation = $targetVariations[$test->id] ?? null;
@@ -118,26 +106,6 @@ class FrontendBeforeRenderEvent {
 			'data-test-test-id' => $testId
 		]);
 
-	}
-
-	/**
-	 * @param Element_Base $child
-	 * @param $testId
-	 * @param $variationId
-	 */
-	public function setSplitTestSettingsOnChildren($child, $testId, $variationId) {
-		$children = $child->get_children();
-		if (sizeof($children) > 0) {
-			foreach ($children as $child) {
-				$this->setSplitTestSettingsOnChildren($child, $testId, $variationId);
-			}
-		}
-
-		if ($child instanceof Widget_Base) {
-			// LOW@kberlau: check if setting is set
-			$child->set_settings('split_test_control_test_id', $testId);
-			$child->set_settings('split_test_control_variation_id', $variationId);
-		}
 	}
 
 }

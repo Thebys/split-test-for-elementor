@@ -2,26 +2,12 @@
 
 namespace SplitTestForElementor\Admin\Classes\Controllers;
 
-use SplitTestForElementor\Classes\Misc\LicenceManager;
 use SplitTestForElementor\Classes\Misc\Util;
 use SplitTestForElementor\Classes\Repo\PostRepo;
 use SplitTestForElementor\Classes\Repo\PostTestRepo;
 use SplitTestForElementor\Classes\Repo\TestRepo;
 
 class SplitTestController {
-
-	private static $licenceManager;
-
-	// Index; Create; Store; Show; Edit; Update; Delete
-
-	/**
-	 * SplitTestController constructor.
-	 */
-	public function __construct() {
-		if (self::$licenceManager == null) {
-			self::$licenceManager = new LicenceManager();
-		}
-	}
 
 	public function run() {
 		switch (isset($_GET['action']) ? $_GET['action'] : "index") {
@@ -47,8 +33,6 @@ class SplitTestController {
 
 	public function store() {
 
-		// LOW@kberlau Input sanitation
-		// LOW@kberlau use nonce
 
 		if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'],'test-nonce') || !is_user_logged_in()) {
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=security_error'));
@@ -56,45 +40,30 @@ class SplitTestController {
 		}
 
 		if (!isset($_POST['test-id'])) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_store_data_missing'));
 			return;
 		}
 
-		// TODO@kberlau: Go back to form
-		// TODO@kberlau: Duplicate Logic
 		if ($_POST['test-conversion-type'] == "page" && ($_POST['test-conversion-page'] == "" || $_POST['test-conversion-page'] == null || $_POST['test-conversion-page'] == "null")) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_conversion_page_missing'));
 			return;
 		}
 
-		// TODO@kberlau: Go back to form
-		// TODO@kberlau: Duplicate Logic
 		if ($_POST['test-conversion-type'] == "url" && ($_POST['test-conversion-url'] == "" || $_POST['test-conversion-url'] == null || $_POST['test-conversion-url'] == "null")) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_conversion_url_missing'));
 			return;
 		}
 
-		// TODO@kberlau: Duplicate Logic
 		if ($_POST['test-type'] == "pages") {
 			if (strpos($_POST['test-uri'], '/') !== false) {
-				// TODO@kberlau: Redirect to filled form
 				wp_redirect(admin_url('admin.php?page=splittest-for-elementor&scope=test&action=create&message=error_test_page_invalid_chars'));
 				return;
 			}
-			//if(Util::urlExists(get_home_url()."/".$_POST['test-uri']."/")) {
-			//	// TODO@kberlau: Redirect to filled form
-			//	wp_redirect(admin_url('admin.php?page=splittest-for-elementor&scope=test&action=create&message=error_test_page_taken'));
-			//	return;
 		}
 
 		$testRepo = new TestRepo();
 
-		// TODO@kberlau: Input validation
 		if ($_POST['test-type'] == "pages") {
-			// TODO@kberlau: Create / update post for preventing conflicts (custom post type maybe)
 			$id = $testRepo->createTest([
 				'name' => $_POST['test-name'],
 				'testType' => $_POST['test-type'],
@@ -148,8 +117,6 @@ class SplitTestController {
 
 	public function update() {
 
-		// LOW@kberlau Input sanitation
-		// LOW@kberlau use nonce
 
 		if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'],'test-nonce') || !is_user_logged_in()) {
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=security_error'));
@@ -157,31 +124,18 @@ class SplitTestController {
 		}
 
 		if (!isset($_POST['test-id'])) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_update_data_missing'));
 			return;
 		}
 
-		// TODO@kberlau: Go back to form
-		// TODO@kberlau: Duplicate Logic
 		if ($_POST['test-conversion-type'] == "page" && ($_POST['test-conversion-page'] == "" || $_POST['test-conversion-page'] == null || $_POST['test-conversion-page'] == "null")) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_conversion_page_missing'));
 			return;
 		}
 
-		// TODO@kberlau: Go back to form
-		// TODO@kberlau: Duplicate Logic
 		if ($_POST['test-conversion-type'] == "url" && ($_POST['test-conversion-url'] == "" || $_POST['test-conversion-url'] == null || $_POST['test-conversion-url'] == "null")) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_conversion_url_missing'));
 			return;
-		}
-
-		if ($_POST['test-conversion-type'] == "url") {
-			// LOW@kberlau Log Error
-//			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_conversion_url_missing'));
-//			return;
 		}
 
 		if ($_POST['test-type'] == "pages") {
@@ -189,17 +143,11 @@ class SplitTestController {
 				wp_redirect(admin_url('admin.php?page=splittest-for-elementor&scope=test&action=edit&id='.$_POST['test-id'].'&message=error_test_page_invalid_chars'));
 				return;
 			}
-			// if(Util::urlExists(get_home_url()."/".$_POST['test-uri']."/")) {
-			// 	wp_redirect(admin_url('admin.php?page=splittest-for-elementor&scope=test&action=edit&id='.$_POST['test-id'].'&message=error_test_page_taken'));
-			// 	return;
-			// }
 		}
 
 		$testRepo = new TestRepo();
-		// TODO@kberlau: Input validation
 
 		if ($_POST['test-type'] == "urls") {
-			// TODO@kberlau: Create / update post for preventing conflicts
 			$testRepo->updateTest((int) $_POST['test-id'], array(
 				'name' => $_POST['test-name'],
 				'testType' => $_POST['test-type'],
@@ -210,7 +158,6 @@ class SplitTestController {
 				'conversionUrl' => $_POST['test-conversion-url'] == "null" ? null : $_POST['test-conversion-url']
 			));
 		} else if ($_POST['test-type'] == "pages") {
-			// TODO@kberlau: Create / update post for preventing conflicts
 			$testRepo->updateTest((int) $_POST['test-id'], array(
 				'name' => $_POST['test-name'],
 				'testType' => $_POST['test-type'],
@@ -257,7 +204,6 @@ class SplitTestController {
 		}
 
 		if (!isset($_GET['id'])) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_delete'));
 		}
 
@@ -275,7 +221,6 @@ class SplitTestController {
 		}
 
 		if (!isset($_GET['id'])) {
-			// LOW@kberlau Log Error
 			wp_redirect(admin_url('admin.php?page=splittest-for-elementor&message=error_update_data_missing'));
 			return;
 		}

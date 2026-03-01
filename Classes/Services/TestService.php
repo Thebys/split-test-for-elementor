@@ -154,7 +154,6 @@ class TestService
 
 	public function getTestDataForJs($test)
 	{
-		// TODO@kberlau: Skip Page Tests
 		$variations = [];
 		foreach ($this->normalizePercentages($test->variations) as $variation) {
 			$variations[] = [

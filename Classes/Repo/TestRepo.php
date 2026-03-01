@@ -111,7 +111,6 @@ class TestRepo {
 		return $results;
 	}
 
-	// TODO@kberlau: Trim conversion url on save
 	public function updateTest($id, $data) {
 		global $wpdb;
 
