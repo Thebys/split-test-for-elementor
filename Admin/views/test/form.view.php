@@ -444,7 +444,7 @@ if ($scope == "edit") {
 					</div>
 
 					<div class="url">
-						<input type="text" placeholder="Add whole url with slash at last." name="test-variation[VARIATION_ID][url]" value="" />
+						<input type="text" placeholder="Add whole url with slash at last." name="test-variation[TEST_COUNT][url]" value="" />
 					</div>
 
 					<div class="percentage">
