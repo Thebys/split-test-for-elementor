@@ -13,13 +13,6 @@ class SettingsManager {
 		SettingsManager::VARIANT_DISTRIBUTION_TYPE => ['default' => 'random', 'type' => 'string'],
 	];
 
-	/** @var LicenceManager */
-	private $licenceManager;
-
-	public function __construct()
-	{
-		$this->licenceManager = new LicenceManager();
-	}
 	public function getValue($key) {
 		return esc_attr($this->getRawValue($key));
 	}
@@ -39,10 +32,8 @@ class SettingsManager {
 
 	public function getRawValue($key) {
 		if (!isset(self::$config[$key])) {
-			// TODO@kberlau: return false if boolean
 			return null;
 		}
-		// TODO@kberlau: Return defaults if pro is not active
 		$value = get_option(self::PREFIX."_".$key, null);
 		if ($value == null || empty(trim($value))) {
 			return self::$config[$key]['default'];

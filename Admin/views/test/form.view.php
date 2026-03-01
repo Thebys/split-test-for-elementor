@@ -37,7 +37,6 @@ if ($scope == "edit") {
 </div>
 
 <script type="application/javascript">
-	<?php // LOW@kberlau move to js file ?>
 
 	window.homeUrl = "<?php echo( home_url('/')); ?>";
 
@@ -74,14 +73,6 @@ if ($scope == "edit") {
 		var testCount = parseInt(jQuery('input[name="variation-count"]').val());
 
 		jQuery(".split-test-for-elementor.test-form .button-add-variation").click(function () {
-
-			if (!<?php echo(self::$licenceManager->hasActiveProLicence() ? 'true' : 'false'); ?>) {
-				var currentTestCount = jQuery(".split-test-for-elementor.test-form .test-variations .row.variation").length;
-				if (currentTestCount >= <?php echo(SPLIT_TEST_FOR_ELEMENTOR_LITE_MAX_VARIATION_COUNT); ?>) {
-					alert("Please buy the pro version to add more Tests");
-					return;
-				}
-			}
 
 			testCount++;
 
@@ -453,7 +444,7 @@ if ($scope == "edit") {
 					</div>
 
 					<div class="url">
-						<input type="text" placeholder="Add whole url with slash at last." name="test-variation[VARIATION_ID][url]" value="" />
+						<input type="text" placeholder="Add whole url with slash at last." name="test-variation[TEST_COUNT][url]" value="" />
 					</div>
 
 					<div class="percentage">

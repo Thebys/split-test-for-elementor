@@ -3,23 +3,8 @@
 namespace SplitTestForElementor\Admin\Classes\Events;
 
 use SplitTestForElementor\Admin\Classes\Controllers\SplitTestController;
-use SplitTestForElementor\Classes\Misc\LicenceManager;
 
 class AdminInitEvent {
-
-	/**
-	 * @var LicenceManager
-	 */
-	private static $licenceManager;
-
-	/**
-	 * AdminInitEvent constructor.
-	 */
-	public function __construct() {
-		if (self::$licenceManager == null) {
-			self::$licenceManager = new LicenceManager();
-		}
-	}
 
 	public function fire() {
 

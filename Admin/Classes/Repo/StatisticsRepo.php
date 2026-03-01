@@ -6,7 +6,6 @@ use SplitTestForElementor\Classes\Repo\TestRepo;
 
 class StatisticsRepo {
 
-	// LOW@kberlau Runs only under mysql???
 
 	public function getStats($testId, $startDate = null, $endDate = null) {
 
@@ -33,7 +32,6 @@ class StatisticsRepo {
 		}
 
 		if (!filter_var($testId, FILTER_VALIDATE_INT)) {
-			// LOW@kberlau Log / Show error
 			return $variations;
 		}
 
