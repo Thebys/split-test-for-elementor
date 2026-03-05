@@ -134,6 +134,16 @@ class SendHeadersEvent {
 
 	private function progressTestsForPage($postId, $clientId) {
 		$testIds = self::$postTestRepo->getTestIdsForPost($postId);
+
+		// Fallback: check Elementor templates whose display conditions
+		// match the current page's post type (covers template-loaded tests).
+		if (sizeof($testIds) == 0 && $postId > 0) {
+			$postType = get_post_type($postId);
+			if ($postType) {
+				$testIds = self::$postTestRepo->getTestIdsFromMatchingTemplates($postType);
+			}
+		}
+
 		if (sizeof($testIds) == 0) {
 			return;
 		}

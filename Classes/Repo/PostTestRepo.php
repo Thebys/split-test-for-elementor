@@ -44,6 +44,61 @@ class PostTestRepo {
 		return $testIds;
 	}
 
+	/**
+	 * Find test IDs from Elementor templates whose display conditions
+	 * match a given post type.  Covers tests placed inside Elementor Pro
+	 * Theme Builder templates (not directly associated with a page post ID).
+	 */
+	public function getTestIdsFromMatchingTemplates($postType) {
+		global $wpdb;
+
+		$table = $this->getTestPostTable($wpdb);
+		$templatePostIds = $wpdb->get_col(
+			"SELECT DISTINCT stp.post_id
+			 FROM {$table} stp
+			 JOIN {$wpdb->prefix}posts p ON stp.post_id = p.ID
+			 WHERE p.post_type = 'elementor_library'"
+		);
+
+		if (empty($templatePostIds)) {
+			return [];
+		}
+
+		$matchingTestIds = [];
+		foreach ($templatePostIds as $templateId) {
+			$conditions = get_post_meta($templateId, '_elementor_conditions', true);
+			if ($this->templateConditionsMatchPostType($conditions, $postType)) {
+				$matchingTestIds = array_merge($matchingTestIds, $this->getTestIdsForPost($templateId));
+			}
+		}
+
+		return array_unique($matchingTestIds);
+	}
+
+	private function templateConditionsMatchPostType($conditions, $postType) {
+		if (empty($conditions) || !is_array($conditions)) {
+			return false;
+		}
+
+		foreach ($conditions as $condition) {
+			$parts = explode('/', $condition);
+			// Elementor Pro format: {include|exclude}/{general|singular|archive}/{post_type}
+			if ($parts[0] !== 'include') {
+				continue;
+			}
+			if (isset($parts[1]) && $parts[1] === 'general') {
+				return true;
+			}
+			if (isset($parts[1]) && $parts[1] === 'singular') {
+				if (!isset($parts[2]) || $parts[2] === $postType) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public function deletePostTestByTestId($splitTestID) {
 		global $wpdb;
 		$wpdb->delete($this->getTestPostTable($wpdb), ['splittest_id' => $splitTestID], ['%d']);
