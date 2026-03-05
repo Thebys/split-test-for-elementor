@@ -13,11 +13,15 @@ class FrontendBeforeRenderEvent {
 	/**
 	 * @var TestService
 	 */
+	/**
+	 * @var TestService
+	 */
 	private static $testService;
 	/**
 	 * @var TestRepo
 	 */
 	private static $testRepo;
+	private static $noCacheHeaderSent = false;
 
 	/**
 	 * WidgetRenderContentEvent constructor.
@@ -55,6 +59,10 @@ class FrontendBeforeRenderEvent {
 			$test = $test[0];
 		}
 
+		// Send no-cache headers when a split test is detected on the page.
+		// This covers template-loaded tests that SendHeadersEvent can't detect.
+		self::sendNoCacheHeaders();
+
 		$targetVariation = $targetVariations[$test->id] ?? null;
 
 		// Resolve variation BEFORE the hiding loop so display:none is never
@@ -85,6 +93,14 @@ class FrontendBeforeRenderEvent {
 			'data-test-test-id' => $testId
 		]);
 
+	}
+
+	public static function sendNoCacheHeaders() {
+		if (!self::$noCacheHeaderSent && !headers_sent()) {
+			header('Cache-Control: no-store, private, no-cache, must-revalidate');
+			header('Pragma: no-cache');
+			self::$noCacheHeaderSent = true;
+		}
 	}
 
 }

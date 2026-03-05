@@ -3,6 +3,7 @@
 namespace SplitTestForElementor\Classes\Services;
 
 use Elementor\Plugin;
+use SplitTestForElementor\Classes\Events\FrontendBeforeRenderEvent;
 use SplitTestForElementor\Classes\Misc\Constants;
 use SplitTestForElementor\Classes\Repo\TestRepo;
 
@@ -38,6 +39,8 @@ class CacheBuster
 		}
 
 		$variationId = $element->get_settings('split_test_control_variation_id');
+
+		FrontendBeforeRenderEvent::sendNoCacheHeaders();
 
 		$targetVariation = isset($targetVariations[$test->id]) ? $targetVariations[$test->id] : null;
 		if ($targetVariation == null) {
