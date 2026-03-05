@@ -14,11 +14,10 @@ use SplitTestForElementor\Classes\Events\WpHeaderEvent;
 use SplitTestForElementor\Classes\Events\SectionShouldRenderEvent;
 use SplitTestForElementor\Classes\Install\DB;
 use SplitTestForElementor\Classes\Repo\PostTestManager;
+use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Services\ExternalLinkTrackingService;
-use SplitTestForElementor\Classes\Services\SettingsPage;
 use SplitTestForElementor\Classes\Update\UpdateManager;
 use SplitTestForElementor\Classes\Services\ExternalPageTrackingService;
-use SplitTestForElementor\Classes\Services\CacheCheckService;
 
 /**
  * @package SplitTestForElementor
@@ -27,7 +26,7 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
  * Plugin URI: https://github.com/Thebys/split-test-for-elementor
  * Description: Split Test For Elementor — forked with bug fixes for template-loaded tests, SQL injection patches, and distribution improvements.
  * Author: Rocket Elements / Thebys
- * Version: 1.8.4-fork.2
+ * Version: 1.8.4-fork.3
  * Author URI: https://github.com/Thebys
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -39,7 +38,7 @@ use SplitTestForElementor\Classes\Services\CacheCheckService;
  */
 
 define('SPLIT_TEST_FOR_ELEMENTOR_MAIN_FILE', __FILE__);
-define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.2");
+define('SPLIT_TEST_FOR_ELEMENTOR_VERSION', "1.8.4-fork.3");
 define('SPLIT_TEST_FOR_ELEMENTOR_VERSION_OPTION_NAME', "split_test_for_elementor_version");
 define('SPLIT_TEST_FOR_ELEMENTOR_SUPPORT_LINK', 'https://www.rocketelements.io/support/');
 
@@ -61,11 +60,6 @@ register_activation_hook(__FILE__, function () {
 		'index.php?test_id=$matches[1]&rocket-split-test-action=external-link-redirect',
 		'top'
 	);
-	add_rewrite_rule(
-		'split-test-for-elementor/v1/check-cache/?$',
-		'index.php?test_id=$matches[1]&rocket-split-test-action=check-cache',
-		'top'
-	);
 	$wp_rewrite->flush_rules();
 });
 
@@ -85,11 +79,9 @@ add_action('elementor/frontend/section/before_render', [new FrontendBeforeRender
 // Removing widgets from content from output
 add_action('elementor/widget/render_content', [new WidgetRenderContentEvent(), 'fire'], 10, 2);
 
-add_action('elementor/frontend/section/after_render', [new \SplitTestForElementor\Classes\Events\FrontendAfterRenderSectionEvent(), 'fire']);
 add_action('elementor/frontend/section/should_render', [new SectionShouldRenderEvent(), 'fire'], 10, 2);
 
 add_action('elementor/frontend/container/before_render', [new FrontendBeforeRenderEvent(), 'fire']);
-add_action('elementor/frontend/container/after_render', [new \SplitTestForElementor\Classes\Events\FrontendAfterRenderSectionEvent(), 'fire']);
 // Admin ===============================================================================================================
 
 function splittest_for_elementor_page() {
@@ -136,14 +128,6 @@ add_action('rest_api_init', function () {
 });
 
 add_action('rest_api_init', function () {
-	register_rest_route('splitTestForElementor/v1', '/tests/getVariationToDisplay/', [
-		'methods' => 'GET',
-		'callback' => array(new TestController(), 'getVariationToDisplay'),
-        'permission_callback' => '__return_true'
-	]);
-});
-
-add_action('rest_api_init', function () {
 	register_rest_route('splitTestForElementor/v1', '/variations/', [
 		'methods' => 'POST',
 		'callback' => array(new VariationController(), 'store'),
@@ -163,17 +147,15 @@ do_action('split_test_for_elementor_after_init');
 
 add_action( 'plugins_loaded', function() {
 	load_plugin_textdomain( 'split-test-for-elementor' );
-	if (is_admin()) {
-		(new CacheCheckService())->runCheck();
-    }
 });
 
 // Other startup stuff
 (new ExternalLinkTrackingService())->registerHooks();
 (new ExternalPageTrackingService())->registerHooks();
-(new CacheCheckService())->registerHooks();
 
-(new SettingsPage)->registerSettingsPage();
+add_action( 'admin_init', function() {
+	(new SettingsManager())->registerSettings();
+});
 
 add_action( 'elementor_pro/forms/new_record', [new FormNewRecordEvent(), 'fire'], 10, 2 );
 

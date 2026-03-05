@@ -4,17 +4,8 @@ namespace SplitTestForElementor\Classes\Endpoints;
 
 use SplitTestForElementor\Classes\Misc\Errors;
 use SplitTestForElementor\Classes\Repo\TestRepo;
-use SplitTestForElementor\Classes\Services\TestService;
 
 class TestController {
-
-    private static $testService;
-
-	public function __construct() {
-		if (self::$testService == null) {
-            self::$testService = new TestService();
-		}
-	}
 
 	public function store() {
 		if(!current_user_can('publish_pages')) {
@@ -63,22 +54,5 @@ class TestController {
 
 		return ['success' => true, 'id' => $newTestId, 'name' => $testName];
 	}
-
-    public function getVariationToDisplay() {
-
-        if (!is_numeric($_GET['testId'])) {
-            return [];
-        }
-
-        $testId = intval($_GET['testId']);
-        $result = self::$testService->getActiveVariation($testId);
-
-        return [
-            'variant' => [
-                'id' => intval($result->id)
-            ]
-        ];
-
-    }
 
 }

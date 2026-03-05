@@ -2,23 +2,15 @@
 
 namespace SplitTestForElementor\Classes\Events;
 
-use Elementor\Plugin;
 use Elementor\Widget_Base;
-use SplitTestForElementor\Classes\Misc\SettingsManager;
-use SplitTestForElementor\Classes\Repo\TestRepo;
 use SplitTestForElementor\Classes\Services\CacheBuster;
 
 class WidgetRenderContentEvent {
 
-	private static $settingsManager;
 	private static $cacheBuster;
 
-	/**
-	 * WidgetRenderContentEvent constructor.
-	 */
 	public function __construct() {
-		if (self::$settingsManager == null) {
-			self::$settingsManager = new SettingsManager();
+		if (self::$cacheBuster == null) {
 			self::$cacheBuster = new CacheBuster();
 		}
 	}

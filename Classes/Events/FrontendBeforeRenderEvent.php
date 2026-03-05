@@ -4,14 +4,12 @@ namespace SplitTestForElementor\Classes\Events;
 
 use \Elementor\Element_Base;
 use Elementor\Plugin;
-use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Repo\TestRepo;
 use SplitTestForElementor\Classes\Services\CacheBuster;
 use SplitTestForElementor\Classes\Services\TestService;
 
 class FrontendBeforeRenderEvent {
 
-	private static $settingsManager;
 	/**
 	 * @var TestService
 	 */
@@ -25,8 +23,7 @@ class FrontendBeforeRenderEvent {
 	 * WidgetRenderContentEvent constructor.
 	 */
 	public function __construct() {
-		if (self::$settingsManager == null) {
-			self::$settingsManager = new SettingsManager();
+		if (self::$testService == null) {
 			self::$testService = new TestService();
 			self::$testRepo = new TestRepo();
 		}
@@ -58,46 +55,28 @@ class FrontendBeforeRenderEvent {
 			$test = $test[0];
 		}
 
-		if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
+		$targetVariation = $targetVariations[$test->id] ?? null;
 
-			$targetVariation = $targetVariations[$test->id] ?? null;
+		// Resolve variation BEFORE the hiding loop so display:none is never
+		// emitted for the winning variant.  Fixes template-loaded tests where
+		// SendHeadersEvent doesn't populate $targetVariations by page post ID.
+		if ($targetVariation === null) {
+			$targetVariation = self::$testService->getActiveVariation($test->id);
+			$targetVariations[$test->id] = $targetVariation;
 
-			// Resolve variation BEFORE the hiding loop so display:none is never
-			// emitted for the winning variant.  Fixes template-loaded tests where
-			// SendHeadersEvent doesn't populate $targetVariations by page post ID.
-			if ($targetVariation === null) {
-				$targetVariation = self::$testService->getActiveVariation($test->id);
-				$targetVariations[$test->id] = $targetVariation;
-
-				$cookieName = "elementor_split_test_" . $test->id . "_variation";
-				if (!isset($_COOKIE[$cookieName])) {
-					echo (new CacheBuster())->RenderSetCookieJs($cookieName, $targetVariation);
-					$_COOKIE[$cookieName] = $targetVariation->id;
-				}
-			}
-
-			if ($targetVariation !== null) {
-				foreach ($test->variations as $variation) {
-					if ($variation->id != $targetVariation->id && $variation->id == $variationId) {
-						echo('<style> .elementor-split-test-' . intval($testId) . '-variation-' . intval($variation->id) . ' { display:none !important; height: 0 !important; } </style>');
-					}
-				}
+			$cookieName = "elementor_split_test_" . $test->id . "_variation";
+			if (!isset($_COOKIE[$cookieName])) {
+				echo (new CacheBuster())->RenderSetCookieJs($cookieName, $targetVariation);
+				$_COOKIE[$cookieName] = $targetVariation->id;
 			}
 		}
 
-		if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			$element->add_render_attribute('_wrapper', [
-				'class' => 'elementor-split-test-hidden-'.$element->get_id()
-			]);
-			?>
-				<script type="text/javascript">
-					try {
-						window.rocketSplitTest.addTest(<?php echo(json_encode(self::$testService->getTestDataForJs($test))); ?>);
-					} catch (e) {
-						console.log(e);
-					}
-				</script>
-			<?php
+		if ($targetVariation !== null) {
+			foreach ($test->variations as $variation) {
+				if ($variation->id != $targetVariation->id && $variation->id == $variationId) {
+					echo('<style> .elementor-split-test-' . intval($testId) . '-variation-' . intval($variation->id) . ' { display:none !important; height: 0 !important; } </style>');
+				}
+			}
 		}
 
 		$element->add_render_attribute('_wrapper', [

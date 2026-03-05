@@ -2,7 +2,6 @@
 
 namespace SplitTestForElementor\Classes\Events;
 
-use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Services\ConversionTracker;
 use SplitTestForElementor\Classes\Misc\Constants;
 use SplitTestForElementor\Classes\Misc\Util;
@@ -20,7 +19,6 @@ class SendHeadersEvent {
 	private static $postTestRepo;
 	private static $testRepo;
 	private static $conversionTrack;
-	private static $settingsManager;
 	private static $testService;
 
 	public function __construct() {
@@ -29,7 +27,6 @@ class SendHeadersEvent {
 			self::$testRepo = new TestRepo();
 			self::$conversionTrack = new ConversionTracker();
 			self::$postTestRepo = new PostTestRepo();
-			self::$settingsManager = new SettingsManager();
 			self::$testService = new TestService();
 		}
 	}
@@ -54,9 +51,7 @@ class SendHeadersEvent {
 		$splitTestClientIdCookieName = Constants::$SPLIT_TEST_CLIENT_ID_COOKIE;
 		if (!isset($_COOKIE[$splitTestClientIdCookieName])) {
 			$clientId = Util::generateV4UUID();
-            if (!self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			    Util::setCookie($splitTestClientIdCookieName, $clientId);
-            }
+			Util::setCookie($splitTestClientIdCookieName, $clientId);
 		} else {
 			$clientId = $_COOKIE[$splitTestClientIdCookieName];
 		}
@@ -65,12 +60,8 @@ class SendHeadersEvent {
 		if (empty($postId) || $postId == null || $postId == 0 || $isHomepage) {
 			$this->progressTestsForRedirect($clientId);
 		}
-		if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			$this->prepareJsTestsForPage( $postId, $clientId );
-		} else {
-			$this->progressConversions( $postId, $clientId, $currentLink );
-			$this->progressTestsForPage( $postId, $clientId );
-		}
+		$this->progressConversions( $postId, $clientId, $currentLink );
+		$this->progressTestsForPage( $postId, $clientId );
 	}
 
 	private function progressConversions($postId, $clientId, $currentLink) {
@@ -117,22 +108,9 @@ class SendHeadersEvent {
 		$targetVariation = $variations[$test->id];
 		$urlQueryParams = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 
-		if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-
-			$splitTestClientIdCookieName = Constants::$SPLIT_TEST_CLIENT_ID_COOKIE;
-			Util::setCookie($splitTestClientIdCookieName, $clientId);
-
-			header('Cache-Control: no-store, private, no-cache, must-revalidate');     // HTTP/1.1
-			header('Cache-Control: pre-check=0, post-check=0, max-age=0, max-stale=0', false);  // HTTP/1.1
-			header('Pragma: public');
-			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');                  // Date in the past
-			header('Expires: 0', false);
-			header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
-			header('Pragma: no-cache');
-			header('Vary: *');
-			header("Connection: close");
-		}
-
+		// Redirect responses must never be cached
+		header('Cache-Control: no-store, private, no-cache, must-revalidate');
+		header('Pragma: no-cache');
 
 		foreach ($test->variations as $variation) {
 			if ($variation->id == $targetVariation->id) {
@@ -159,6 +137,11 @@ class SendHeadersEvent {
 		if (sizeof($testIds) == 0) {
 			return;
 		}
+
+		// Prevent CDN/proxy caching on pages with active split tests
+		header('Cache-Control: no-store, private, no-cache, must-revalidate');
+		header('Pragma: no-cache');
+
 		$tests = self::$testRepo->getTests($testIds);
 		$this->progressTests($tests, $clientId);
 	}
@@ -215,20 +198,5 @@ class SendHeadersEvent {
 
 		return $targetVariations;
 	}
-
-	private function prepareJsTestsForPage($postId, $clientId) {
-		global $rocketSplitTestRunningTests;
-		$rocketSplitTestRunningTests = [];
-		$testIds = self::$postTestRepo->getTestIdsForPost($postId);
-		if (sizeof($testIds) == 0) {
-			return;
-		}
-
-		$tests = self::$testRepo->getTests($testIds);
-		foreach ($tests as $test) {
-			$rocketSplitTestRunningTests[] = self::$testService->getTestDataForJs($test);
-		}
-	}
-
 
 }

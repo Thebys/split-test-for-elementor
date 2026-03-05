@@ -152,19 +152,4 @@ class TestService
         return 0;
     }
 
-	public function getTestDataForJs($test)
-	{
-		$variations = [];
-		foreach ($this->normalizePercentages($test->variations) as $variation) {
-			$variations[] = [
-				'id' => (int) $variation->id,
-				'percentage' => $variation->normalizedPercentage,
-			];
-		}
-		return [
-			'id' => (int) $test->id,
-			'variations' => $variations
-		];
-	}
-
 }

@@ -2,10 +2,7 @@
 
 namespace SplitTestForElementor\Classes\Services;
 
-use SplitTestForElementor\Classes\Misc\SettingsManager;
 use SplitTestForElementor\Classes\Services\ConversionTracker;
-use SplitTestForElementor\Classes\Misc\Constants;
-use SplitTestForElementor\Classes\Misc\Util;
 use SplitTestForElementor\Classes\Repo\PostTestManager;
 use SplitTestForElementor\Classes\Repo\PostTestRepo;
 use SplitTestForElementor\Classes\Repo\TestRepo;
@@ -19,7 +16,6 @@ class ExternalLinkTrackingService {
 	private static $postTestRepo;
 	private static $testRepo;
 	private static $conversionTrack;
-	private static $settingsManager;
 
 	public function __construct() {
 		if (self::$postTestManager == null) {
@@ -27,7 +23,6 @@ class ExternalLinkTrackingService {
 			self::$testRepo = new TestRepo();
 			self::$conversionTrack = new ConversionTracker();
 			self::$postTestRepo = new PostTestRepo();
-			self::$settingsManager = new SettingsManager();
 		}
 	}
 
@@ -98,18 +93,8 @@ class ExternalLinkTrackingService {
 	{
 		$this->trackConversion($testId);
 		header("Access-Control-Allow-Origin: *");
-
-		if (self::$settingsManager->getRawValue(SettingsManager::CACHE_BUSTER_ACTIVE)) {
-			header('Cache-Control: no-store, private, no-cache, must-revalidate');     // HTTP/1.1
-			header('Cache-Control: pre-check=0, post-check=0, max-age=0, max-stale=0', false);  // HTTP/1.1
-			header('Pragma: public');
-			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');                  // Date in the past
-			header('Expires: 0', false);
-			header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
-			header('Pragma: no-cache');
-			header('Vary: *');
-			header("Connection: close");
-		}
+		header('Cache-Control: no-store, private, no-cache, must-revalidate');
+		header('Pragma: no-cache');
 
 		$test = self::$testRepo->getTest($testId);
 		if ($test != null) {

@@ -5,11 +5,9 @@ namespace SplitTestForElementor\Classes\Misc;
 class SettingsManager {
 
 	const PREFIX = "rocket_split_test";
-	const CACHE_BUSTER_ACTIVE = "cache_buster_active";
 	const VARIANT_DISTRIBUTION_TYPE = "variant_distribution_type";
 
 	private static $config = [
-		SettingsManager::CACHE_BUSTER_ACTIVE => ['default' => false, 'type' => 'boolean'],
 		SettingsManager::VARIANT_DISTRIBUTION_TYPE => ['default' => 'random', 'type' => 'string'],
 	];
 
@@ -18,9 +16,6 @@ class SettingsManager {
 	}
 
 	public function registerSettings() {
-		add_option( self::PREFIX."_".self::CACHE_BUSTER_ACTIVE, self::$config[self::CACHE_BUSTER_ACTIVE]['default']);
-		register_setting( 'split_test_for_elementor_options_group', self::PREFIX."_".self::CACHE_BUSTER_ACTIVE, ['type' => self::$config[self::CACHE_BUSTER_ACTIVE]['type']]);
-
 		add_option( self::PREFIX."_".self::VARIANT_DISTRIBUTION_TYPE, self::$config[self::VARIANT_DISTRIBUTION_TYPE]['default']);
 		register_setting( 'split_test_for_elementor_options_group', self::PREFIX."_".self::VARIANT_DISTRIBUTION_TYPE, ['type' => self::$config[self::VARIANT_DISTRIBUTION_TYPE]['type']]);
 	}
